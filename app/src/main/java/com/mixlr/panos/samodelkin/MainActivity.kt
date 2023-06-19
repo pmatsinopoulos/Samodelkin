@@ -3,7 +3,13 @@ package com.mixlr.panos.samodelkin
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.provider.Contacts
 import com.mixlr.panos.samodelkin.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.Serializable
 
 private const val CHARACTER_DATA_KEY = "CHARACTER_DATA_KEY"
@@ -21,11 +27,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        characterData = savedInstanceState?.characterData ?: CharacterGenerator.generate()
-        displayCharacterData()
-        binding.btnGenerate.setOnClickListener {
-            characterData = CharacterGenerator.generate()
+        CoroutineScope(Dispatchers.IO).launch {
+            characterData = savedInstanceState?.characterData ?: CharacterGenerator.generate()
             displayCharacterData()
+        }
+
+        binding.btnGenerate.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                characterData = CharacterGenerator.fetchCharacterData()
+                displayCharacterData()
+            }
         }
     }
 
@@ -34,15 +45,17 @@ class MainActivity : AppCompatActivity() {
         outState.characterData = characterData
     }
 
-    private fun displayCharacterData() {
-        characterData.run {
-            val cd = this
-            binding.apply {
-                nameTextView.text = cd.name
-                raceTextView.text = cd.race
-                dexterityTextView.text = cd.dex
-                wisdomTextView.text = cd.wis
-                strengthTextView.text = cd.str
+    private suspend fun displayCharacterData() {
+        withContext(Dispatchers.Main) {
+            characterData.run {
+                val cd = this
+                binding.apply {
+                    nameTextView.text = cd.name
+                    raceTextView.text = cd.race
+                    dexterityTextView.text = cd.dex
+                    wisdomTextView.text = cd.wis
+                    strengthTextView.text = cd.str
+                }
             }
         }
     }
