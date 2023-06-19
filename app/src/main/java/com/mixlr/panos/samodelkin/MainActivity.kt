@@ -13,6 +13,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         displayCharacterData()
+        binding.btnGenerate.setOnClickListener {
+            characterData = CharacterGenerator.generate()
+            displayCharacterData()
+        }
     }
 
     private fun displayCharacterData() {
