@@ -8,6 +8,10 @@ import java.io.Serializable
 
 private const val CHARACTER_DATA_KEY = "CHARACTER_DATA_KEY"
 
+private var Bundle.characterData
+    get() = getSerializable(CHARACTER_DATA_KEY) as CharacterGenerator.CharacterData
+    set(value) = putSerializable(CHARACTER_DATA_KEY, value)
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var characterData: CharacterGenerator.CharacterData
@@ -17,9 +21,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        characterData = savedInstanceState?.let {
-            it.getSerializable(CHARACTER_DATA_KEY) as CharacterGenerator.CharacterData
-        } ?: CharacterGenerator.generate()
+        characterData = savedInstanceState?.characterData ?: CharacterGenerator.generate()
         displayCharacterData()
         binding.btnGenerate.setOnClickListener {
             characterData = CharacterGenerator.generate()
@@ -29,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(CHARACTER_DATA_KEY, characterData)
+        outState.characterData = characterData
     }
 
     private fun displayCharacterData() {
