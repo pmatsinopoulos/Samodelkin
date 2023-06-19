@@ -1,5 +1,7 @@
 package com.mixlr.panos.samodelkin
 
+import java.io.Serializable
+
 private fun <T> List<T>.rand() = shuffled().first()
 private fun Int.roll() = (0 until this)
     .map { (1..6).toList().rand() }
@@ -17,7 +19,7 @@ object CharacterGenerator {
         val dex: String,
         val wis: String,
         val str: String
-    )
+    ) : Serializable
 
     private fun name () = "${firstName.rand()} ${lastName.rand()}"
 
