@@ -6,12 +6,13 @@ import com.mixlr.panos.samodelkin.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var characterData = CharacterGenerator.generate()
+    private lateinit var characterData: CharacterGenerator.CharacterData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        characterData = CharacterGenerator.generate()
         displayCharacterData()
         binding.btnGenerate.setOnClickListener {
             characterData = CharacterGenerator.generate()
