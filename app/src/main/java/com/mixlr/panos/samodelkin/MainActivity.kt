@@ -12,6 +12,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        displayCharacterData()
+    }
+
+    private fun displayCharacterData() {
         characterData.run {
             val cd = this
             binding.apply {
